@@ -1,0 +1,33 @@
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Base de datos local y copias de demo (no se suben a Git)
+db.sqlite3
+db.sqlite3-journal
+*.sqlite3
+*.sqlite3-journal
+demo/
+copias/
+
+# Claves y variables locales
+.env
+*.env
+
+# Archivos estáticos recolectados
+staticfiles/
+
+# Editores y sistema operativo
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Archivos temporales de Word
+~$*.docx
