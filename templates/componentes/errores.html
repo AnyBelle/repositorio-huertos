@@ -1,0 +1,13 @@
+{% if form.errors %}
+<div class="alert alert-danger" role="alert" tabindex="-1">
+  <strong>Revisa los datos del formulario.</strong>
+  <ul class="mb-0 mt-2">
+    {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+    {% for campo in form %}
+      {% for error in campo.errors %}
+      <li>{% if campo.is_hidden %}No se pudo validar el envío. Vuelve a abrir el formulario e inténtalo de nuevo.{% else %}{% if campo.id_for_label %}<a href="#{{ campo.id_for_label }}">{{ campo.label }}: {{ error }}</a>{% else %}{{ campo.label }}: {{ error }}{% endif %}{% endif %}</li>
+      {% endfor %}
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}

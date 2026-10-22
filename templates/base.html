@@ -1,0 +1,70 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#285a39">
+  <title>{% block titulo %}{% block title %}Huertos medicinales comunitarios{% endblock %}{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <a class="saltar-contenido" href="#contenido">Saltar al contenido</a>
+  {% block header %}
+  <header class="cabecera">
+    <div class="container cabecera-interior">
+      {% url 'actividades:inicio_huerto_virtual' as inicio_url %}
+      {% url 'catalogo:lista_plantas' as catalogo_url %}
+      {% url 'catalogo:guia' as guia_url %}
+      {% url 'catalogo:calendario' as calendario_url %}
+      {# Rutas provisionales: confirmar nombres con cada autor antes de integrar. #}
+      {% url 'comunidades:mi_comunidad' as comunidad_url %}
+      {% url 'actividades:historial' as historial_url %}
+      {% url 'cuentas:perfil' as perfil_url %}
+      {% url 'cuentas:login' as login_url %}
+      {% url 'cuentas:logout' as logout_url %}
+      <a class="marca" href="{{ inicio_url|default:login_url|default:'/' }}">
+        <span class="marca-icono" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 26V14M10 26h12M16 20C6 21 5 15 6 11c7-1 10 3 10 9ZM16 15c-1-7 3-11 10-10 1 7-3 11-10 10Z"/></svg>
+        </span>
+        <span>Huertos medicinales comunitarios</span>
+      </a>
+      {% if user.is_authenticated %}
+      <div class="navegacion">
+        <nav class="menu-enlaces" aria-label="Navegación principal">
+          {% with seccion=request.resolver_match.url_name %}
+          {% if inicio_url %}<a href="{{ inicio_url }}" {% if seccion == 'inicio_huerto_virtual' %}aria-current="page"{% endif %}>Mi huerto</a>{% endif %}
+          {% if catalogo_url %}<a href="{{ catalogo_url }}" {% if seccion == 'lista_plantas' or seccion == 'detalle_planta' %}aria-current="page"{% endif %}>Catálogo</a>{% endif %}
+          {% if comunidad_url %}<a href="{{ comunidad_url }}" {% if request.resolver_match.namespace == 'comunidades' %}aria-current="page"{% endif %}>Mi comunidad</a>{% endif %}
+          {% if historial_url %}<a href="{{ historial_url }}" {% if seccion == 'historial' %}aria-current="page"{% endif %}>Historial</a>{% endif %}
+          {% endwith %}
+          {% if guia_url %}<a href="{{ guia_url }}" {% if request.resolver_match.url_name == 'guia' %}aria-current="page"{% endif %}>Guías</a>{% endif %}
+          {% if calendario_url %}<a href="{{ calendario_url }}" {% if request.resolver_match.url_name == 'calendario' %}aria-current="page"{% endif %}>Calendario</a>{% endif %}
+        </nav>
+      </div>
+      {% endif %}
+      <div class="cuenta">
+        {% if user.is_authenticated %}
+        <details class="menu-cuenta">
+          <summary><span class="avatar" aria-hidden="true">{{ user.get_username|first|upper }}</span><span>{{ user.first_name|default:user.get_username }}</span><span aria-hidden="true">⌄</span></summary>
+          <div class="opciones-cuenta">
+            {% if perfil_url %}<a href="{{ perfil_url }}">Mi perfil</a>{% endif %}
+            {% if logout_url %}<form action="{{ logout_url }}" method="post">{% csrf_token %}<button type="submit">Cerrar sesión</button></form>{% endif %}
+          </div>
+        </details>
+        {% elif login_url %}<a class="btn btn-outline-primary" href="{{ login_url }}">Iniciar sesión</a>{% endif %}
+      </div>
+    </div>
+  </header>
+  {% endblock %}
+  <main id="contenido" class="container contenido" tabindex="-1">
+    {% block messages %}{% include 'componentes/mensajes.html' %}{% endblock %}
+    {% block contenido %}{% block content %}{% endblock %}{% endblock %}
+  </main>
+  {% block footer %}<footer class="pie"><div class="container">Huertos medicinales comunitarios · Cuidemos juntos lo que crece.</div></footer>{% endblock %}
+  <script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
